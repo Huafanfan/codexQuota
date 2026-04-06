@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodexQuota</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Codex Quota</p>
+          <h1>Local quota now, web accounts next.</h1>
+          <p class="lede">
+            Electron tray app with local session parsing today and isolated web account sessions for future multi-account usage tracking.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button id="add-account" class="primary">Add Web Account</button>
+          <button id="open-usage" class="secondary">Open Usage Page</button>
+        </div>
+      </section>
+
+      <section class="card quota-card">
+        <div class="card-header">
+          <div>
+            <p class="section-label">Local source</p>
+            <h2>Current quota</h2>
+          </div>
+          <p id="updated-at" class="meta">Updated: --</p>
+        </div>
+        <div id="quota-grid" class="quota-grid">
+          <article class="quota-metric">
+            <p class="metric-label">5H</p>
+            <p class="metric-value">--</p>
+            <p class="metric-meta">reset --</p>
+          </article>
+          <article class="quota-metric">
+            <p class="metric-label">7D</p>
+            <p class="metric-value">--</p>
+            <p class="metric-meta">reset --</p>
+          </article>
+        </div>
+        <div id="quota-details" class="quota-details">Waiting for local Codex usage data.</div>
+      </section>
+
+      <section class="card accounts-card">
+        <div class="card-header">
+          <div>
+            <p class="section-label">Future web source</p>
+            <h2>Authorized accounts</h2>
+          </div>
+        </div>
+        <div id="accounts-list" class="accounts-list">
+          <p class="empty-state">No web accounts authorized yet.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+  </html>

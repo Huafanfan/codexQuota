@@ -1,0 +1,17 @@
+{
+  "name": "codex-quota",
+  "version": "1.0.0",
+  "description": "Electron menu bar app for tracking Codex quota and future multi-account web sessions.",
+  "main": "src/main/index.js",
+  "private": true,
+  "scripts": {
+    "dev": "electron .",
+    "start": "electron .",
+    "build:mac": "electron-packager . CodexQuota --platform=darwin --arch=arm64 --out=release --overwrite --app-bundle-id=local.codex.quota --prune=true --ignore='^/(release|build|dist|\\.build|\\.git|node_modules/.cache)'",
+    "install:applications": "node scripts/install-app.cjs"
+  },
+  "devDependencies": {
+    "@electron/packager": "^18.3.6",
+    "electron": "^35.2.1"
+  }
+}

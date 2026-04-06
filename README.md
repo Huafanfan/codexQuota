@@ -1,40 +1,65 @@
-# Codex Quota Menu Bar
+# CodexQuota
 
-A native macOS menu bar app that reads local Codex session data from `~/.codex/sessions` and shows the remaining quota for the rolling 5-hour and 7-day windows.
+Electron-based macOS tray app for Codex quota tracking, designed to keep the current local-session parser and make room for future multi-account ChatGPT web authorization.
 
-## Features
+## Why Electron
 
-- Native menu bar UI built with AppKit
-- Two-line status display for `5H` and `7D`
-- Remaining quota percentage plus reset time
-- Lightweight color warning for lower remaining quota
-- Launch-at-login toggle from the menu
-- One-command build script
-- Automatic install to `/Applications/CodexQuota.app` after each build
+This project moved from a native AppKit-only prototype to Electron because future quota tracking via the ChatGPT usage page will need:
 
-## Data source
+- independent login sessions per account
+- durable cookie isolation
+- multiple authorized accounts on the same machine
 
-The app scans local `rollout-*.jsonl` files under `~/.codex/sessions` and picks the latest real `event_msg -> token_count` event. It reads:
+Electron gives that through per-account persistent `session` partitions.
 
-- `rate_limits.primary` for the 5-hour window
-- `rate_limits.secondary` for the 7-day window
+## Current features
 
-No network requests are made. Everything is read from the local Codex state on your Mac.
+- Tray app with compact `5H` / `7D` quota readout
+- Main dashboard window for quota details
+- Local quota parsing from `~/.codex/sessions`
+- Launch-at-login toggle from the tray menu
+- Web-account authorization skeleton with isolated Electron sessions
+- Automatic install to `/Applications/CodexQuota.app`
 
-## Build
+## Local quota source
+
+The app scans local `rollout-*.jsonl` files under `~/.codex/sessions` and picks the latest valid `event_msg -> token_count` event.
+
+It reads:
+
+- `rate_limits.primary` for the rolling 5-hour window
+- `rate_limits.secondary` for the rolling 7-day window
+
+## Web account direction
+
+The Electron migration also adds the architecture for future usage-page integrations:
+
+- each web account gets its own persistent Electron partition
+- login happens in a dedicated browser window
+- account metadata is stored under Electron `userData`
+
+The current code sets up authorization storage and session isolation. It does not yet parse the remote usage page into live quota data.
+
+## Build and install
 
 ```bash
 ./scripts/build_app.sh
 ```
 
-That command will:
+That script will:
 
-1. Compile the menu bar app
-2. Generate app icon assets
-3. Build `./dist/CodexQuota.app`
-4. Install or overwrite `/Applications/CodexQuota.app`
+1. install npm dependencies when missing
+2. package the Electron app for macOS arm64
+3. copy the built app to `/Applications/CodexQuota.app`
 
-## Run
+## Run in development
+
+```bash
+npm install
+npm run dev
+```
+
+## Run installed app
 
 ```bash
 open /Applications/CodexQuota.app
@@ -42,12 +67,12 @@ open /Applications/CodexQuota.app
 
 ## Project layout
 
-- `Sources/main.m` — AppKit menu bar app
-- `scripts/build_app.sh` — build and install script
-- `scripts/render_icon.m` — icon renderer used by the build script
+- `src/main/` — Electron main process, tray integration, quota parser, account store
+- `src/renderer/` — dashboard UI
+- `scripts/build_app.sh` — package and install script
 
 ## Requirements
 
-- macOS 13+
-- Apple Command Line Tools
-- A local Codex installation that has already produced at least one `token_count` event
+- macOS
+- Node.js and npm
+- local Codex usage data under `~/.codex/sessions`
